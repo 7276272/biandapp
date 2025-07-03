@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { CURRENT_NETWORK } from './contracts'
 
 export interface WalletState {
   isConnected: boolean
@@ -37,13 +38,15 @@ export const isMetaMaskInstalled = (): boolean => {
   return Boolean(window.ethereum?.isMetaMask)
 }
 
-export const switchToMainnet = async (): Promise<void> => {
+export const switchToCurrentNetwork = async (): Promise<void> => {
   if (!window.ethereum) throw new Error('MetaMask not installed')
 
+  const chainIdHex = `0x${CURRENT_NETWORK.CHAIN_ID.toString(16)}`
+  
   try {
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: '0x1' }], // Mainnet
+      params: [{ chainId: chainIdHex }],
     })
   } catch (error: unknown) {
     if (error && typeof error === 'object' && 'code' in error && error.code === 4902) {
@@ -51,15 +54,15 @@ export const switchToMainnet = async (): Promise<void> => {
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [{
-          chainId: '0x1',
-          chainName: 'Ethereum Mainnet',
+          chainId: chainIdHex,
+          chainName: getNetworkName(),
           nativeCurrency: {
             name: 'Ethereum',
             symbol: 'ETH',
             decimals: 18,
           },
-          rpcUrls: ['https://mainnet.infura.io/v3/YOUR_PROJECT_ID'],
-          blockExplorerUrls: ['https://etherscan.io/'],
+          rpcUrls: [CURRENT_NETWORK.RPC_URL],
+          blockExplorerUrls: [CURRENT_NETWORK.EXPLORER_URL],
         }],
       })
     } else {
@@ -68,16 +71,15 @@ export const switchToMainnet = async (): Promise<void> => {
   }
 }
 
-// Types for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      isMetaMask?: boolean
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
-      on: (event: string, callback: (data: unknown) => void) => void
-      removeListener: (event: string, callback: (data: unknown) => void) => void
-      selectedAddress: string | null
-      chainId: string | null
-    }
-  }
+// 获取当前网络名称
+const getNetworkName = (): string => {
+  if (CURRENT_NETWORK.CHAIN_ID === 1) return 'Ethereum Mainnet (Tenderly)'
+  if (CURRENT_NETWORK.CHAIN_ID === 56) return 'BSC Mainnet'
+  if (CURRENT_NETWORK.CHAIN_ID === 97) return 'BSC Testnet'
+  return 'Unknown Network'
 }
+
+// 保留旧函数名以兼容
+export const switchToMainnet = switchToCurrentNetwork
+
+// Note: window.ethereum types are defined globally elsewhere

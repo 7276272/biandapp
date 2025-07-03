@@ -192,6 +192,24 @@ export default function AdminDashboard() {
 
           <Card>
             <CardHeader>
+              <CardTitle>授权转账</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                管理Web3授权转账、执行合约转账操作
+              </p>
+              <Button 
+                className="w-full bg-green-600 hover:bg-green-700"
+                onClick={() => router.push('/admin/transfers')}
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                授权转账
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>系统设置</CardTitle>
             </CardHeader>
             <CardContent>

@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase configuration
-const supabaseUrl = 'https://jpqqioeidalyiwknzoab.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwcXFpb2VpZGFseWl3a256b2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU4OTAzMjQsImV4cCI6MjA1MTQ2NjMyNH0.wVlOQaFqNJ-PgZfxGgdXvGlQVpq4lLbgLLIhBBpvWuY'
+// Supabase configuration - 使用环境变量
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://jpqqioeidalyiwknzoab.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwcXFpb2VpZGFseWl3a256b2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MjgxMjYsImV4cCI6MjA2NzEwNDEyNn0.MonqF7iB9bqtzojLo7Hz5xfRZyDJxbzMuIIc00CLkXo'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 

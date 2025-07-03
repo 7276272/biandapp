@@ -1,28 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0 0; /* Pure black for frosted glass effect */
-    --foreground: 255 255 255;
-    --card: 15 15 15; /* Dark frosted glass */
-    --card-foreground: 255 255 255;
-    --popover: 0 0 0;
-    --popover-foreground: 255 255 255;
-    --primary: 255 215 0; /* Bright yellow for buttons */
-    --primary-foreground: 0 0 0;
-    --secondary: 25 25 25;
-    --secondary-foreground: 255 255 255;
-    --muted: 40 40 40;
-    --muted-foreground: 160 160 160;
-    --accent: 255 215 0;
-    --accent-foreground: 0 0 0;
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
-    --border: 40 40 40;
-    --input: 25 25 25;
-    --ring: 255 215 0;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
     --radius: 0.5rem;
   }
 }
@@ -45,29 +53,33 @@
 
 /* Frosted glass effects */
 .frosted-glass {
-  background: rgba(15, 15, 15, 0.4);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  color: #ffffff;
 }
 
 .frosted-glass:hover {
-  background: rgba(25, 25, 25, 0.5);
-  border: 1px solid rgba(255, 215, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
 }
 
 .frosted-glass-light {
-  background: rgba(25, 25, 25, 0.3);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
+  color: #ffffff;
 }
 
 .frosted-glass-light:hover {
-  background: rgba(35, 35, 35, 0.4);
-  border: 1px solid rgba(255, 215, 0, 0.15);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .mining-gradient {
@@ -85,32 +97,33 @@
 }
 
 .gold-text {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: glow 2s ease-in-out infinite alternate;
+  font-weight: 700;
 }
 
 @keyframes glow {
-  from {
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.3));
   }
-  to {
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+  50% {
+    filter: drop-shadow(0 0 30px rgba(234, 179, 8, 0.6));
   }
 }
 
 .glass-effect {
-  background: rgba(15, 15, 15, 0.6);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 215, 0, 0.2);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
 }
 
 .glass-effect:hover {
-  background: rgba(25, 25, 25, 0.7);
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transform: scale(1.02);
 }
 
@@ -138,16 +151,16 @@
 
 .btn-glow:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4);
 }
 
 /* Card pulse animation */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
   }
   50% {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 0 35px rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -157,8 +170,8 @@
 
 /* Number counter animation */
 .counter-text {
-  font-variant-numeric: tabular-nums;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
 }
 
 .counter-text:hover {
@@ -207,7 +220,7 @@
 }
 
 .nav-item:hover img {
-  filter: brightness(1.2) drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
 }
 
 /* Scrollbar styling - Frosted theme */
@@ -221,13 +234,13 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(255, 215, 0);
+  background: rgb(255, 255, 255);
   border-radius: 3px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(255, 165, 0);
+  background: rgb(255, 255, 255);
 }
 
 /* Floating animation for main cards */
@@ -255,7 +268,7 @@
 }
 
 .shimmer {
-  background: linear-gradient(90deg, rgba(40, 40, 40, 0.1) 25%, rgba(255, 215, 0, 0.1) 50%, rgba(40, 40, 40, 0.1) 75%);
+  background: linear-gradient(90deg, rgba(40, 40, 40, 0.1) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(40, 40, 40, 0.1) 75%);
   background-size: 400% 100%;
   animation: shimmer 1.5s linear infinite;
 }
@@ -311,10 +324,10 @@
 /* Enhanced glow effects */
 @keyframes pulse-gold {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.2);
   }
   50% {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 35px rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 35px rgba(255, 255, 255, 0.4);
   }
 }
 
@@ -345,7 +358,7 @@
 
 .interactive-hover:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 /* Smooth scroll behavior */
@@ -366,74 +379,218 @@ html {
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(45deg, #FFD700, #FFA500);
   border-radius: 4px;
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(45deg, #FFA500, #FFD700);
 }
 
-/* 隐藏钱包连接弹窗中的文字内容 */
-/* 隐藏 "Haven't got a wallet? Get started" 文字 */
-w3m-modal *[data-testid="w3m-connecting-siwe"],
-w3m-modal *[data-testid="w3m-connecting-external"],
-w3m-modal .w3m-modal-footer,
-w3m-modal .w3m-info-footer,
-w3m-modal .w3m-legal-footer,
-w3m-modal .w3m-footer,
-w3m-modal .w3m-help-footer,
-w3m-modal .w3m-wallet-get-started,
-w3m-modal .w3m-get-started,
-w3m-modal .w3m-qr-code-footer,
-w3m-modal div[data-testid="w3m-legal-footer"],
-w3m-modal div[data-testid="w3m-info-footer"],
-w3m-modal div[data-testid="w3m-help-footer"],
-w3m-modal div[data-testid="w3m-footer"],
-w3m-modal .w3m-modal-footer-border,
-w3m-modal .w3m-footer-border,
-w3m-modal .w3m-info-footer-border,
-w3m-modal .w3m-help-footer-border,
-w3m-modal .w3m-legal-footer-border,
-/* 隐藏 "UX by / reown" 文字 */
-w3m-modal .w3m-brand-footer,
-w3m-modal .w3m-brand-logo,
-w3m-modal .w3m-powered-by,
-w3m-modal .w3m-reown-logo,
-w3m-modal .w3m-wallet-connect-logo,
-w3m-modal div[data-testid="w3m-brand-footer"],
-w3m-modal div[data-testid="w3m-powered-by"],
-w3m-modal div[data-testid="w3m-reown-logo"],
-w3m-modal div[data-testid="w3m-wallet-connect-logo"],
-/* 使用更广泛的选择器隐藏底部内容 */
-w3m-modal .w3m-modal-container > *:last-child,
-w3m-modal .w3m-modal-content > *:last-child,
-w3m-modal .w3m-modal-body > *:last-child,
-/* 隐藏所有包含链接和品牌信息的元素 */
-w3m-modal a[href*="reown"],
-w3m-modal a[href*="walletconnect"],
-w3m-modal a[href*="cloud.reown"],
-w3m-modal a[href*="cloud.walletconnect"],
-/* 隐藏包含特定类名的元素 */
-w3m-modal *[class*="footer"],
-w3m-modal *[class*="brand"],
-w3m-modal *[class*="powered"],
-w3m-modal *[class*="reown"],
-w3m-modal *[class*="walletconnect"],
-w3m-modal *[class*="get-started"],
-w3m-modal *[class*="help"],
-w3m-modal *[class*="legal"],
-w3m-modal *[class*="info"] {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  overflow: hidden !important;
+/* 确保文字颜色在各种背景下都清晰可见 */
+.text-white {
+  color: #ffffff !important;
 }
 
-/* 针对AppKit组件的特定隐藏 */
+.text-black {
+  color: #000000 !important;
+}
+
+/* 管理后台文字颜色优化 */
+.bg-gray-50 .text-gray-900,
+.bg-white .text-gray-900 {
+  color: #111827 !important;
+}
+
+.dark .bg-gray-800 .text-white,
+.dark .bg-gray-900 .text-white {
+  color: #ffffff !important;
+}
+
+/* 确保muted文字在深色背景下可见 */
+.text-muted-foreground {
+  color: #94a3b8 !important;
+}
+
+.dark .text-muted-foreground {
+  color: #64748b !important;
+}
+
+/* 卡片内文字颜色 */
+.card .text-sm,
+.card .text-xs,
+.card .text-base {
+  color: inherit;
+}
+
+/* 按钮文字颜色 */
+button {
+  color: inherit;
+}
+
+/* 导航文字颜色 */
+nav a {
+  color: inherit;
+}
+
+/* 表格文字颜色 */
+table td,
+table th {
+  color: inherit;
+}
+
+/* Badge文字颜色 */
+.badge {
+  color: inherit;
+}
+
+/* 管理后台特定样式优化 */
+.admin-dashboard {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.admin-dashboard .dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.admin-card {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-card.dark {
+  background-color: #1f2937;
+  color: #f9fafb;
+  border: 1px solid #374151;
+}
+
+/* 用户端文字颜色优化 */
+.frosted-glass .text-muted-foreground {
+  color: #94a3b8 !important;
+}
+
+/* 底部导航栏文字 */
+.bottom-nav .text-white {
+  color: #ffffff !important;
+}
+
+.bottom-nav .text-primary {
+  color: #eab308 !important;
+}
+
+/* 强制确保重要文字可见 */
+h1, h2, h3, h4, h5, h6 {
+  color: inherit !important;
+}
+
+.card-title {
+  color: inherit !important;
+}
+
+.text-primary {
+  color: #eab308 !important;
+}
+
+.text-green-400 {
+  color: #4ade80 !important;
+}
+
+.text-blue-400 {
+  color: #60a5fa !important;
+}
+
+.text-cyan-400 {
+  color: #22d3ee !important;
+}
+
+.text-red-400 {
+  color: #f87171 !important;
+}
+
+.text-yellow-400 {
+  color: #facc15 !important;
+}
+
+/* 金色文字 */
+.gold-text {
+  background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* 数字动画文字 */
+.counter-text {
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(234, 179, 8, 0.5);
+}
+
+/* 浮动动画 */
+@keyframes floating {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(234, 179, 8, 0.6); }
+}
+
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+.pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.slow-spin {
+  animation: slow-spin 3s linear infinite;
+}
+
+.slide-in-up {
+  animation: slide-in-up 0.6s ease-out;
+}
+
+/* 粒子背景优化 */
+.particle-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
 /* 隐藏AppKit弹窗中的底部内容 */
 appkit-modal .appkit-modal-footer,
 appkit-modal .appkit-info-footer,

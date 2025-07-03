@@ -34,7 +34,7 @@ export function WalletProvider({ children }: WalletProviderProps) {
   const { open } = useAppKit()
 
   const contextValue: WalletContextType = {
-    account: address,
+    account: typeof address === 'string' ? address : undefined,
     isConnected,
     chainId: chain?.id,
     balance: balance?.formatted,

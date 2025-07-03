@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 import { useWallet } from '@/contexts/WalletContext'
+import BottomNavigation, { BottomSpacer } from '@/components/BottomNavigation'
 
 export default function MiningPage() {
   const { account, isConnected, balance, connect, disconnect } = useWallet()
@@ -154,43 +155,8 @@ export default function MiningPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 frosted-glass border-t border-border">
-        <div className="flex justify-around items-center py-2">
-          {[
-            { src: "https://ext.same-assets.com/590002659/2588141536.png", alt: "Home", label: "Home", active: false, href: "/" },
-            { src: "https://ext.same-assets.com/590002659/1667291039.png", alt: "Mining", label: "Mining", active: true, href: "/mining" },
-            { src: "https://ext.same-assets.com/590002659/3073358967.png", alt: "Service", label: "Service", active: false, href: "/service" },
-            { src: "https://ext.same-assets.com/590002659/855995434.png", alt: "Invite", label: "Invite", active: false, href: "/invite" },
-            { src: "https://ext.same-assets.com/590002659/2669583638.png", alt: "User", label: "User", active: false, href: "/user" },
-          ].map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`flex flex-col items-center py-2 px-4 transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-                item.active ? 'scale-110' : ''
-              }`}
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className={`w-6 h-6 mb-1 transition-all duration-300 ${
-                  item.active
-                    ? 'filter brightness-0 saturate-100 contrast-200 hue-rotate-45'
-                    : 'filter brightness-0 invert'
-                }`}
-              />
-              <span className={`text-xs transition-all duration-300 ${
-                item.active ? 'text-primary font-semibold' : 'text-white'
-              }`}>
-                {item.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </nav>
-
-      {/* Add bottom padding to account for fixed navigation */}
-      <div className="h-20" />
+      <BottomNavigation />
+      <BottomSpacer />
     </div>
   )
 }

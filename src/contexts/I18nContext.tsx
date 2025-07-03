@@ -7,7 +7,7 @@ import {
   getBrowserLanguage, 
   type Language, 
   type TranslationContent 
-} from '@/lib/i18n'
+} from '@/lib/i18n-simple'
 
 interface I18nContextType {
   language: Language
@@ -42,7 +42,7 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const t = translations[language]
 
   // 可用语言列表
-  const availableLanguages: Language[] = ['zh', 'en', 'ja', 'ko', 'es', 'fr', 'de', 'ru']
+  const availableLanguages: Language[] = ['zh', 'en']
 
   const value: I18nContextType = {
     language,

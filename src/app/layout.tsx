@@ -4,7 +4,8 @@ import "./globals.css";
 import Script from "next/script";
 import ClientBody from "./ClientBody";
 import { WalletProvider } from "@/contexts/WalletContext";
-import { AppKitProvider } from "@/contexts/AppKitProvider";
+import AppKitProvider from "@/contexts/AppKitProvider";
+import { I18nProvider } from "@/contexts/I18nContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,11 +36,13 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className="antialiased">
-        <AppKitProvider>
-          <WalletProvider>
-            <ClientBody>{children}</ClientBody>
-          </WalletProvider>
-        </AppKitProvider>
+        <I18nProvider>
+          <AppKitProvider>
+            <WalletProvider>
+              <ClientBody>{children}</ClientBody>
+            </WalletProvider>
+          </AppKitProvider>
+        </I18nProvider>
       </body>
     </html>
   );

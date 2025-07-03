@@ -2,68 +2,59 @@
 
 import { createAppKit } from '@reown/appkit/react'
 import { WagmiProvider } from 'wagmi'
-import { arbitrum, mainnet, bscTestnet, bsc } from '@reown/appkit/networks'
+import { bsc, bscTestnet } from '@reown/appkit/networks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { ReactNode, useEffect } from 'react'
-import { initWalletUICustomizer } from '@/lib/wallet-ui-customizer'
+import { cookieToInitialState } from 'wagmi'
+import { ReactNode } from 'react'
 
-// 0. Setup queryClient
+// 配置查询客户端
 const queryClient = new QueryClient()
 
-// 1. Get projectId from https://cloud.reown.com
+// 项目ID - 使用有效的项目ID
 const projectId = 'c482c3062b88c6cc75e14712c5249b37'
 
-// 2. Create a metadata object - optional
+// 创建模态配置
 const metadata = {
-  name: 'BSC Pool DeFi Mining Platform',
-  description: '安全、高效、透明的去中心化挖矿平台',
-  url: 'https://us4dt.com', // origin must match your domain & subdomain
+  name: 'BSC Pool DApp',
+  description: 'Decentralized Mining Pool on BSC',
+  url: 'https://reown.com/appkit',
   icons: ['https://assets.reown.com/reown-profile-pic.png']
 }
 
-// 3. Set the networks - 包含 BSC 网络
-const networks = [bsc, mainnet, arbitrum, bscTestnet]
-
-// 4. Create Wagmi Adapter
+// 创建 Wagmi 适配器
 const wagmiAdapter = new WagmiAdapter({
-  networks,
-  projectId,
-  ssr: true
+  ssr: true,
+  networks: [bsc, bscTestnet],
+  projectId
 })
 
-// 5. Create modal
+// 创建 AppKit 实例
 createAppKit({
   adapters: [wagmiAdapter],
-  networks,
-  projectId,
+  networks: [bsc, bscTestnet],
   metadata,
+  projectId,
   features: {
-    analytics: true // Optional - defaults to your Cloud configuration
+    analytics: true,
+    email: false,
+    socials: false
   }
 })
 
 interface AppKitProviderProps {
   children: ReactNode
+  cookies?: string
 }
 
-export function AppKitProvider({ children }: AppKitProviderProps) {
-  // 初始化钱包UI定制器
-  useEffect(() => {
-    const cleanup = initWalletUICustomizer();
-    
-    // 组件卸载时清理
-    return cleanup;
-  }, []);
+export default function AppKitProvider({ children, cookies }: AppKitProviderProps) {
+  const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig, cookies)
 
   return (
-    <WagmiProvider config={wagmiAdapter.wagmiConfig}>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
         {children}
       </QueryClientProvider>
     </WagmiProvider>
   )
-}
-
-// 导出 wagmi adapter 以便其他组件使用
-export { wagmiAdapter } 
+} 

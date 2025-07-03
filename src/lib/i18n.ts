@@ -90,6 +90,50 @@ export interface TranslationContent {
   walletConnectionFailed: string
   invalidAddress: string
   insufficientBalance: string
+  
+  // 服务页面
+  ourServices: string
+  miningPoolServices: string
+  miningPoolDescription: string
+  secureStaking: string
+  secureStakingDescription: string
+  defiTrading: string
+  defiTradingDescription: string
+  groupMining: string
+  groupMiningDescription: string
+  lowFee: string
+  dailyPayouts: string
+  uptime: string
+  globalServers: string
+  noLockupPeriod: string
+  insuranceCovered: string
+  monitoring24x7: string
+  autoTradingBots: string
+  lowLatency: string
+  advancedCharts: string
+  apiAccess: string
+  sharedHardware: string
+  splitProfits: string
+  reducedCosts: string
+  groupManagement: string
+  getStarted: string
+  performanceAnalytics: string
+  realTimeAnalytics: string
+  realTimeAnalyticsDescription: string
+  multiWalletSupport: string
+  multiWalletSupportDescription: string
+  support24x7: string
+  support24x7Description: string
+  flexiblePayouts: string
+  flexiblePayoutsDescription: string
+  activeMiners: string
+  dailyVolume: string
+  secure: string
+  popular: string
+  advanced: string
+  community: string
+  miningServices: string
+  miningServicesDescription: string
 }
 
 // 翻译内容
@@ -182,7 +226,51 @@ export const translations: Record<Language, TranslationContent> = {
     transactionFailed: '交易失败',
     walletConnectionFailed: '钱包连接失败',
     invalidAddress: '无效地址',
-    insufficientBalance: '余额不足'
+    insufficientBalance: '余额不足',
+    
+    // 服务页面
+    ourServices: '我们的服务',
+    miningPoolServices: '矿池服务',
+    miningPoolDescription: '加入我们的高性能矿池，享受有竞争力的费用和可靠的收益。',
+    secureStaking: '安全质押',
+    secureStakingDescription: '使用机构级安全性质押您的ETH，获得稳定奖励。',
+    defiTrading: 'DeFi交易',
+    defiTradingDescription: '使用高级交易工具和自动化策略获得最大收益。',
+    groupMining: '团队挖矿',
+    groupMiningDescription: '与其他矿工组合资源，提高效率降低成本。',
+    lowFee: '低费用1%',
+    dailyPayouts: '每日收益',
+    uptime: '99.9%在线',
+    globalServers: '全球服务器',
+    noLockupPeriod: '无锁定期',
+    insuranceCovered: '保险覆盖',
+    monitoring24x7: '24/7监控',
+    autoTradingBots: '自动交易机器人',
+    lowLatency: '低延迟',
+    advancedCharts: '高级图表',
+    apiAccess: 'API访问',
+    sharedHardware: '共享硬件',
+    splitProfits: '分享利润',
+    reducedCosts: '降低成本',
+    groupManagement: '团队管理',
+    getStarted: '开始使用',
+    performanceAnalytics: '性能分析',
+    realTimeAnalytics: '实时分析',
+    realTimeAnalyticsDescription: '通过实时图表和详细统计监控您的挖矿性能。',
+    multiWalletSupport: '多钱包支持',
+    multiWalletSupportDescription: '连接多个钱包并在一个地方管理所有资产。',
+    support24x7: '24/7支持',
+    support24x7Description: '我们的专业支持团队和社区随时为您提供帮助。',
+    flexiblePayouts: '灵活收益',
+    flexiblePayoutsDescription: '从每日、每周或每月收益时间表中选择。',
+    activeMiners: '活跃矿工',
+    dailyVolume: '日交易量',
+    secure: '安全',
+    popular: '热门',
+    advanced: '高级',
+    community: '社区',
+    miningServices: '挖矿服务',
+    miningServicesDescription: '全面的加密货币挖矿和DeFi服务，获得最大收益率'
   },
   
   en: {
@@ -273,7 +361,51 @@ export const translations: Record<Language, TranslationContent> = {
     transactionFailed: 'Transaction Failed',
     walletConnectionFailed: 'Wallet Connection Failed',
     invalidAddress: 'Invalid Address',
-    insufficientBalance: 'Insufficient Balance'
+    insufficientBalance: 'Insufficient Balance',
+    
+    // Services Page
+    ourServices: 'Our Services',
+    miningPoolServices: 'Mining Pool Services',
+    miningPoolDescription: 'Join our high-performance mining pools with competitive fees and reliable payouts.',
+    secureStaking: 'Secure Staking',
+    secureStakingDescription: 'Stake your ETH with institutional-grade security and earn steady rewards.',
+    defiTrading: 'DeFi Trading',
+    defiTradingDescription: 'Access advanced trading tools and automated strategies for maximum profits.',
+    groupMining: 'Group Mining',
+    groupMiningDescription: 'Combine resources with other miners for better efficiency and lower costs.',
+    lowFee: 'Low 1% fee',
+    dailyPayouts: 'Daily payouts',
+    uptime: '99.9% uptime',
+    globalServers: 'Global servers',
+    noLockupPeriod: 'No lock-up period',
+    insuranceCovered: 'Insurance covered',
+    monitoring24x7: '24/7 monitoring',
+    autoTradingBots: 'Auto-trading bots',
+    lowLatency: 'Low latency',
+    advancedCharts: 'Advanced charts',
+    apiAccess: 'API access',
+    sharedHardware: 'Shared hardware',
+    splitProfits: 'Split profits',
+    reducedCosts: 'Reduced costs',
+    groupManagement: 'Group management',
+    getStarted: 'Get Started',
+    performanceAnalytics: 'Performance Analytics',
+    realTimeAnalytics: 'Real-time Analytics',
+    realTimeAnalyticsDescription: 'Monitor your mining performance with live charts and detailed statistics.',
+    multiWalletSupport: 'Multi-Wallet Support',
+    multiWalletSupportDescription: 'Connect multiple wallets and manage all your assets in one place.',
+    support24x7: '24/7 Support',
+    support24x7Description: 'Get help anytime with our dedicated support team and community.',
+    flexiblePayouts: 'Flexible Payouts',
+    flexiblePayoutsDescription: 'Choose from daily, weekly, or monthly payout schedules.',
+    activeMiners: 'Active Miners',
+    dailyVolume: 'Daily Volume',
+    secure: 'Secure',
+    popular: 'Popular',
+    advanced: 'Advanced',
+    community: 'Community',
+    miningServices: 'Mining Services',
+    miningServicesDescription: 'Comprehensive cryptocurrency mining and DeFi services for maximum profitability'
   },
   
   ja: {

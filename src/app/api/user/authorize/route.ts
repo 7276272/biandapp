@@ -4,7 +4,9 @@ import { supabase } from '@/lib/supabase'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { address, isAuthorized } = body
+    // 支持多种参数名称
+    const address = body.address || body.walletAddress
+    const isAuthorized = body.isAuthorized ?? body.authorized
 
     if (!address) {
       return NextResponse.json(

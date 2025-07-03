@@ -109,6 +109,7 @@ export function getAdminSession() {
 // 清除管理员登录状态
 export function clearAdminSession() {
   Cookies.remove('admin_session')
+  Cookies.remove('admin_session_secure')
 }
 
 // 验证管理员权限中间件

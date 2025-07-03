@@ -2,7 +2,7 @@
 
 import { useContext } from 'react'
 import { I18nContext } from '@/contexts/I18nContext'
-import type { Language } from '@/lib/i18n'
+import type { Language } from '@/lib/i18n-simple'
 
 export const useI18n = () => {
   const context = useContext(I18nContext)
@@ -112,13 +112,7 @@ export const useFormatDate = () => {
 const getLocaleFromLanguage = (language: Language): string => {
   const localeMap: Record<Language, string> = {
     zh: 'zh-CN',
-    en: 'en-US',
-    ja: 'ja-JP',
-    ko: 'ko-KR',
-    es: 'es-ES',
-    fr: 'fr-FR',
-    de: 'de-DE',
-    ru: 'ru-RU'
+    en: 'en-US'
   }
   return localeMap[language] || 'en-US'
 } 

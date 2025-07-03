@@ -1,10 +1,14 @@
 // 环境变量配置
 export const env = {
-  // API服务器地址 - 线上服务器
-  API_BASE_URL: 'https://us4dt.com/',
+  // API服务器地址 - 使用本地Supabase API
+  API_BASE_URL: process.env.NODE_ENV === 'production' ? 'https://your-domain.com/' : 'http://localhost:3000/',
   
-  // WebSocket地址
-  WS_BASE_URL: 'wss://us4dt.com/ws',
+  // Supabase配置
+  SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://jpqqioeidalyiwknzoab.supabase.co',
+  SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwcXFpb2VpZGFseWl3a256b2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU3MTQ3NTYsImV4cCI6MjA1MTI5MDc1Nn0.mEjIaJkGRpEfuLwHmCJhwHqgJkTsQjxzNvDhwXdGgEY',
+  
+  // WebSocket地址 - 暂时禁用
+  WS_BASE_URL: null,
   
   // 是否为开发环境
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
@@ -22,39 +26,19 @@ export const env = {
   // 支持的语言列表
   SUPPORTED_LANGUAGES: ['zh', 'en', 'ja', 'ko', 'es', 'fr', 'de', 'ru'],
   
-  // API路径
+  // API路径 - 现在使用本地Supabase API
   API_PATHS: {
     // 用户相关
-    USER_INFO: 'api/xhsk/userinfo.html',
-    USER_BIND: 'api/xhsk/bind.html',
+    USER_INFO: 'api/user/info',
+    USER_AUTHORIZE: 'api/user/authorize',
     
-    // 钱包连接
-    WALLET_CONNECT: 'api/api/walletConnect.html',
+    // 质押相关
+    STAKING: 'api/staking',
     
-    // 文章公告
-    ARTICLES: 'api/xhsk/articles.html',
-    ARTICLE_DETAIL: 'api/xhsk/artdetail.html',
-    
-    // 财务记录
-    REWARD_LIST: 'api/xhsk/rewardlist.html',
-    TASKS_LIST: 'api/xhsk/taskslist.html',
-    PLEDGE_LIST: 'api/xhsk/pledgelist.html',
-    WITHDRAW_LIST: 'api/xhsk/withdrawlist.html',
-    WITHDRAW: 'api/xhsk/withdraw.html',
-    
-    // 邀请相关
-    INVITE_LIST: 'api/xhsk/invitelist.html',
-    
-    // 配置数据
-    YUN_POOL: 'api/xhsk/getYunPool.html',
-    STATISTICS: 'api/xhsk/getStatistics.html',
-    CURRENCY: 'api/xhsk/getCurrency.html',
-    
-    // 登录日志
-    LOGIN_LIST: 'api/xhsk/loginlist.html',
-    
-    // 其他
-    GET_SIGN: 'api/xhsk/getSign.html'
+    // 管理员相关
+    ADMIN_LOGIN: 'api/admin/auth/login',
+    ADMIN_STATS: 'api/admin/stats',
+    ADMIN_USERS: 'api/admin/users',
   }
 }
 

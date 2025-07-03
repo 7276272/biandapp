@@ -7,6 +7,9 @@ import { EnhancedButton } from '@/components/EnhancedButton'
 import { PriceChart } from '@/components/charts/PriceChart'
 import { MiningPerformanceChart, HashRateChart } from '@/components/charts/MiningChart'
 import { ParticleBackground } from '@/components/ParticleBackground'
+import PartnersSection from '@/components/PartnersSection'
+import LanguageSelector from '@/components/LanguageSelector'
+import { useI18n } from '@/hooks/useI18n'
 import Link from 'next/link'
 import {
   Zap,
@@ -22,61 +25,63 @@ import {
 } from 'lucide-react'
 
 export default function ServicePage() {
+  const { t } = useI18n()
+  
   const services = [
     {
       icon: <Zap className="w-8 h-8" />,
-      title: "Mining Pool Services",
-      description: "Join our high-performance mining pools with competitive fees and reliable payouts.",
-      features: ["Low 1% fee", "Daily payouts", "99.9% uptime", "Global servers"],
+      title: t.miningPoolServices,
+      description: t.miningPoolDescription,
+      features: [t.lowFee, t.dailyPayouts, t.uptime, t.globalServers],
       price: "1% Fee",
-      badge: "Popular"
+      badge: t.popular
     },
     {
       icon: <Shield className="w-8 h-8" />,
-      title: "Secure Staking",
-      description: "Stake your ETH with institutional-grade security and earn steady rewards.",
-      features: ["4.5% APY", "No lock-up period", "Insurance covered", "24/7 monitoring"],
+      title: t.secureStaking,
+      description: t.secureStakingDescription,
+      features: ["4.5% APY", t.noLockupPeriod, t.insuranceCovered, t.monitoring24x7],
       price: "4.5% APY",
-      badge: "Secure"
+      badge: t.secure
     },
     {
       icon: <TrendingUp className="w-8 h-8" />,
-      title: "DeFi Trading",
-      description: "Access advanced trading tools and automated strategies for maximum profits.",
-      features: ["Auto-trading bots", "Low latency", "Advanced charts", "API access"],
+      title: t.defiTrading,
+      description: t.defiTradingDescription,
+      features: [t.autoTradingBots, t.lowLatency, t.advancedCharts, t.apiAccess],
       price: "0.1% Fee",
-      badge: "Advanced"
+      badge: t.advanced
     },
     {
       icon: <Users className="w-8 h-8" />,
-      title: "Group Mining",
-      description: "Combine resources with other miners for better efficiency and lower costs.",
-      features: ["Shared hardware", "Split profits", "Reduced costs", "Group management"],
+      title: t.groupMining,
+      description: t.groupMiningDescription,
+      features: [t.sharedHardware, t.splitProfits, t.reducedCosts, t.groupManagement],
       price: "2% Fee",
-      badge: "Community"
+      badge: t.community
     }
   ]
 
   const features = [
     {
       icon: <BarChart3 className="w-6 h-6" />,
-      title: "Real-time Analytics",
-      description: "Monitor your mining performance with live charts and detailed statistics."
+      title: t.realTimeAnalytics,
+      description: t.realTimeAnalyticsDescription
     },
     {
       icon: <Wallet className="w-6 h-6" />,
-      title: "Multi-Wallet Support",
-      description: "Connect multiple wallets and manage all your assets in one place."
+      title: t.multiWalletSupport,
+      description: t.multiWalletSupportDescription
     },
     {
       icon: <Clock className="w-6 h-6" />,
-      title: "24/7 Support",
-      description: "Get help anytime with our dedicated support team and community."
+      title: t.support24x7,
+      description: t.support24x7Description
     },
     {
       icon: <DollarSign className="w-6 h-6" />,
-      title: "Flexible Payouts",
-      description: "Choose from daily, weekly, or monthly payout schedules."
+      title: t.flexiblePayouts,
+      description: t.flexiblePayoutsDescription
     }
   ]
 
@@ -86,10 +91,7 @@ export default function ServicePage() {
 
       {/* Header */}
       <header className="flex items-center justify-between p-4 frosted-glass border-b border-border/20 text-[#000000] bg-[#f9f900] font-bold relative z-10">
-        <div className="flex items-center gap-2 slide-in-up">
-          <img src="https://ext.same-assets.com/590002659/3894291359.png" alt="English" className="w-5 h-5" />
-          <span className="text-sm text-muted-foreground">English</span>
-        </div>
+        <LanguageSelector variant="compact" />
         <WalletStatus />
       </header>
 
@@ -98,9 +100,9 @@ export default function ServicePage() {
 
         {/* Hero Section */}
         <section className="text-center mb-12 slide-in-up">
-          <h1 className="text-4xl font-bold mb-4 gold-text">Mining Services</h1>
+          <h1 className="text-4xl font-bold mb-4 gold-text">{t.miningServices}</h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Comprehensive cryptocurrency mining and DeFi services for maximum profitability
+            {t.miningServicesDescription}
           </p>
 
           {/* Service Overview Cards */}
@@ -109,28 +111,28 @@ export default function ServicePage() {
               <CardContent className="p-4 text-center">
                 <Award className="w-8 h-8 mx-auto mb-2 text-primary" />
                 <div className="text-2xl font-bold text-white">99.9%</div>
-                <div className="text-sm text-muted-foreground">Uptime</div>
+                <div className="text-sm text-muted-foreground">{t.uptime}</div>
               </CardContent>
             </Card>
             <Card className="frosted-glass floating" style={{ animationDelay: '0.2s' }}>
               <CardContent className="p-4 text-center">
                 <Users className="w-8 h-8 mx-auto mb-2 text-blue-400" />
                 <div className="text-2xl font-bold text-white">50K+</div>
-                <div className="text-sm text-muted-foreground">Active Miners</div>
+                <div className="text-sm text-muted-foreground">{t.activeMiners}</div>
               </CardContent>
             </Card>
             <Card className="frosted-glass floating" style={{ animationDelay: '0.4s' }}>
               <CardContent className="p-4 text-center">
                 <TrendingUp className="w-8 h-8 mx-auto mb-2 text-green-400" />
                 <div className="text-2xl font-bold text-white">$2.5M</div>
-                <div className="text-sm text-muted-foreground">Daily Volume</div>
+                <div className="text-sm text-muted-foreground">{t.dailyVolume}</div>
               </CardContent>
             </Card>
             <Card className="frosted-glass floating" style={{ animationDelay: '0.6s' }}>
               <CardContent className="p-4 text-center">
                 <Shield className="w-8 h-8 mx-auto mb-2 text-cyan-400" />
                 <div className="text-2xl font-bold text-white">100%</div>
-                <div className="text-sm text-muted-foreground">Secure</div>
+                <div className="text-sm text-muted-foreground">{t.secure}</div>
               </CardContent>
             </Card>
           </div>
@@ -138,7 +140,7 @@ export default function ServicePage() {
 
         {/* Services Grid */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8 gold-text">Our Services</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 gold-text">{t.ourServices}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services.map((service, index) => (
               <Card key={service.title} className="frosted-glass hover:scale-105 transition-all duration-300 floating" style={{ animationDelay: `${index * 0.2}s` }}>
@@ -168,7 +170,7 @@ export default function ServicePage() {
                   <div className="flex items-center justify-between pt-4 border-t border-border/20">
                     <div className="text-2xl font-bold text-primary">{service.price}</div>
                     <EnhancedButton className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                      Get Started
+                      {t.getStarted}
                     </EnhancedButton>
                   </div>
                 </CardContent>
@@ -179,7 +181,7 @@ export default function ServicePage() {
 
         {/* Performance Charts */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8 gold-text">Performance Analytics</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 gold-text">{t.performanceAnalytics}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card className="frosted-glass">
               <CardHeader>
@@ -201,15 +203,18 @@ export default function ServicePage() {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Features Grid */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8 gold-text">Platform Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <Card key={feature.title} className="frosted-glass text-center floating" style={{ animationDelay: `${index * 0.1}s` }}>
                 <CardContent className="p-6">
-                  <div className="text-primary mb-4 flex justify-center">{feature.icon}</div>
-                  <h3 className="font-semibold mb-2">{feature.title}</h3>
+                  <div className="flex justify-center mb-4">
+                    <div className="p-3 bg-primary/10 rounded-full">
+                      {feature.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
@@ -217,11 +222,11 @@ export default function ServicePage() {
           </div>
         </section>
 
-        {/* Price Chart Section */}
+        {/* Price Chart */}
         <section className="mb-12">
           <Card className="frosted-glass">
             <CardHeader>
-              <CardTitle className="text-center">Ethereum Price (7 Days)</CardTitle>
+              <CardTitle>Price Chart</CardTitle>
             </CardHeader>
             <CardContent>
               <PriceChart coinId="ethereum" days={7} height={400} />
@@ -229,25 +234,35 @@ export default function ServicePage() {
           </Card>
         </section>
 
+        {/* Partners Section */}
+        <section className="mb-12">
+          <PartnersSection />
+        </section>
+
         {/* CTA Section */}
         <section className="text-center">
           <Card className="frosted-glass">
             <CardContent className="p-8">
-              <h2 className="text-3xl font-bold mb-4 gold-text">Ready to Start Mining?</h2>
-              <p className="text-xl text-muted-foreground mb-6">
-                Join thousands of miners earning passive income with our platform
+              <h2 className="text-3xl font-bold mb-4 gold-text">{t.getStarted}</h2>
+              <p className="text-xl text-muted-foreground mb-8">
+                {t.welcomeMessage}
               </p>
-              <div className="flex flex-col md:flex-row gap-4 justify-center">
-                <EnhancedButton size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Start Mining Now
-                </EnhancedButton>
-                <EnhancedButton variant="outline" size="lg">
-                  View Documentation
-                </EnhancedButton>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/mining">
+                  <EnhancedButton className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                    {t.startMining}
+                  </EnhancedButton>
+                </Link>
+                <Link href="/wallet">
+                  <EnhancedButton variant="outline" className="border-primary text-primary hover:bg-primary/10">
+                    {t.connectWallet}
+                  </EnhancedButton>
+                </Link>
               </div>
             </CardContent>
           </Card>
         </section>
+
       </div>
 
       {/* Bottom Navigation */}

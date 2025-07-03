@@ -18,7 +18,7 @@ const CONTRACT_CONFIG = {
   RPC_URL: 'https://bsc-dataseed.binance.org',
   
   // 合约地址 (需要根据实际部署更新)
-  MAIN_CONTRACT: '0x...', // 主业务合约地址
+  MAIN_CONTRACT: '0x55d398326f99059fF775485246999027B3197955', // 主业务合约地址
   USDT_CONTRACT: '0x55d398326f99059fF775485246999027B3197955', // BSC USDT合约地址
   
   // Gas配置
