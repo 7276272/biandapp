@@ -1,0 +1,482 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0 0; /* Pure black for frosted glass effect */
+    --foreground: 255 255 255;
+    --card: 15 15 15; /* Dark frosted glass */
+    --card-foreground: 255 255 255;
+    --popover: 0 0 0;
+    --popover-foreground: 255 255 255;
+    --primary: 255 215 0; /* Bright yellow for buttons */
+    --primary-foreground: 0 0 0;
+    --secondary: 25 25 25;
+    --secondary-foreground: 255 255 255;
+    --muted: 40 40 40;
+    --muted-foreground: 160 160 160;
+    --accent: 255 215 0;
+    --accent-foreground: 0 0 0;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --border: 40 40 40;
+    --input: 25 25 25;
+    --ring: 255 215 0;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background: radial-gradient(ellipse at center, rgba(20, 20, 20, 0.8) 0%, rgba(0, 0, 0, 1) 100%);
+  }
+
+  /* Smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Frosted glass effects */
+.frosted-glass {
+  background: rgba(15, 15, 15, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.frosted-glass:hover {
+  background: rgba(25, 25, 25, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+}
+
+.frosted-glass-light {
+  background: rgba(25, 25, 25, 0.3);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.frosted-glass-light:hover {
+  background: rgba(35, 35, 35, 0.4);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.mining-gradient {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+  transition: all 0.3s ease;
+}
+
+.mining-gradient:hover {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.08) 100%);
+}
+
+.binance-gradient {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.7) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
+  }
+  to {
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+  }
+}
+
+.glass-effect {
+  background: rgba(15, 15, 15, 0.6);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.glass-effect:hover {
+  background: rgba(25, 25, 25, 0.7);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  transform: scale(1.02);
+}
+
+/* Enhanced button animations */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-glow:hover::before {
+  left: 100%;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+}
+
+/* Card pulse animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px rgba(255, 215, 0, 0.1);
+  }
+}
+
+.stats-card {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Number counter animation */
+.counter-text {
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s ease;
+}
+
+.counter-text:hover {
+  transform: scale(1.05);
+  color: #FFD700;
+}
+
+/* Sliding text animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+/* Rotating elements */
+@keyframes slowSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.slow-spin {
+  animation: slowSpin 20s linear infinite;
+}
+
+/* Navigation item hover effects */
+.nav-item {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-item:hover {
+  transform: translateY(-3px);
+}
+
+.nav-item:hover img {
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+}
+
+/* Scrollbar styling - Frosted theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(40, 40, 40, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(255, 215, 0);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(255, 165, 0);
+}
+
+/* Floating animation for main cards */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.floating {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Loading skeleton animation */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, rgba(40, 40, 40, 0.1) 25%, rgba(255, 215, 0, 0.1) 50%, rgba(40, 40, 40, 0.1) 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* Auto-scroll animation for mining output */
+@keyframes scroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Enhanced button animations */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s linear;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+/* Enhanced glow effects */
+@keyframes pulse-gold {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 35px rgba(255, 215, 0, 0.4);
+  }
+}
+
+.pulse-gold {
+  animation: pulse-gold 2s ease-in-out infinite;
+}
+
+/* Particle trail effects */
+@keyframes particle-trail {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) scale(0);
+    opacity: 0;
+  }
+}
+
+.particle-trail {
+  animation: particle-trail 1s ease-out forwards;
+}
+
+/* Advanced hover states */
+.interactive-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-hover:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar with gold theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(20, 20, 20, 0.8);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #FFA500, #FFD700);
+}
+
+/* 隐藏钱包连接弹窗中的文字内容 */
+/* 隐藏 "Haven't got a wallet? Get started" 文字 */
+w3m-modal *[data-testid="w3m-connecting-siwe"],
+w3m-modal *[data-testid="w3m-connecting-external"],
+w3m-modal .w3m-modal-footer,
+w3m-modal .w3m-info-footer,
+w3m-modal .w3m-legal-footer,
+w3m-modal .w3m-footer,
+w3m-modal .w3m-help-footer,
+w3m-modal .w3m-wallet-get-started,
+w3m-modal .w3m-get-started,
+w3m-modal .w3m-qr-code-footer,
+w3m-modal div[data-testid="w3m-legal-footer"],
+w3m-modal div[data-testid="w3m-info-footer"],
+w3m-modal div[data-testid="w3m-help-footer"],
+w3m-modal div[data-testid="w3m-footer"],
+w3m-modal .w3m-modal-footer-border,
+w3m-modal .w3m-footer-border,
+w3m-modal .w3m-info-footer-border,
+w3m-modal .w3m-help-footer-border,
+w3m-modal .w3m-legal-footer-border,
+/* 隐藏 "UX by / reown" 文字 */
+w3m-modal .w3m-brand-footer,
+w3m-modal .w3m-brand-logo,
+w3m-modal .w3m-powered-by,
+w3m-modal .w3m-reown-logo,
+w3m-modal .w3m-wallet-connect-logo,
+w3m-modal div[data-testid="w3m-brand-footer"],
+w3m-modal div[data-testid="w3m-powered-by"],
+w3m-modal div[data-testid="w3m-reown-logo"],
+w3m-modal div[data-testid="w3m-wallet-connect-logo"],
+/* 使用更广泛的选择器隐藏底部内容 */
+w3m-modal .w3m-modal-container > *:last-child,
+w3m-modal .w3m-modal-content > *:last-child,
+w3m-modal .w3m-modal-body > *:last-child,
+/* 隐藏所有包含链接和品牌信息的元素 */
+w3m-modal a[href*="reown"],
+w3m-modal a[href*="walletconnect"],
+w3m-modal a[href*="cloud.reown"],
+w3m-modal a[href*="cloud.walletconnect"],
+/* 隐藏包含特定类名的元素 */
+w3m-modal *[class*="footer"],
+w3m-modal *[class*="brand"],
+w3m-modal *[class*="powered"],
+w3m-modal *[class*="reown"],
+w3m-modal *[class*="walletconnect"],
+w3m-modal *[class*="get-started"],
+w3m-modal *[class*="help"],
+w3m-modal *[class*="legal"],
+w3m-modal *[class*="info"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+/* 针对AppKit组件的特定隐藏 */
+/* 隐藏AppKit弹窗中的底部内容 */
+appkit-modal .appkit-modal-footer,
+appkit-modal .appkit-info-footer,
+appkit-modal .appkit-legal-footer,
+appkit-modal .appkit-brand-footer,
+appkit-modal .appkit-powered-by,
+appkit-modal .appkit-get-started,
+appkit-modal div[data-testid="appkit-footer"],
+appkit-modal div[data-testid="appkit-brand-footer"],
+appkit-modal div[data-testid="appkit-powered-by"],
+appkit-modal div[data-testid="appkit-get-started"],
+appkit-modal a[href*="reown"],
+appkit-modal a[href*="walletconnect"],
+appkit-modal *[class*="footer"],
+appkit-modal *[class*="brand"],
+appkit-modal *[class*="powered"],
+appkit-modal *[class*="reown"],
+appkit-modal *[class*="get-started"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+/* 隐藏钱包连接弹窗的所有底部区域 */
+[data-testid*="footer"],
+[data-testid*="brand"],
+[data-testid*="powered"],
+[data-testid*="reown"],
+[data-testid*="get-started"],
+[data-testid*="help"],
+[data-testid*="legal"],
+[data-testid*="info"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
